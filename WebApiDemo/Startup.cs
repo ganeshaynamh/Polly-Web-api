@@ -42,16 +42,27 @@ namespace WebApiDemo
             });
 
 
-            services.AddDbContext<DemoDbContext>(options => 
-                                  options.UseSqlServer(Configuration.GetConnectionString("ConnectionString"),
-                                  sqlServerOptionsAction: sqlOptions => 
-                                  {
-                                      sqlOptions.EnableRetryOnFailure(
-                                      maxRetryCount: 2,
-                                      maxRetryDelay: TimeSpan.FromSeconds(30),
-                                      errorNumbersToAdd: null);
-                                  }
-                                  ));
+            //services.AddDbContext<DemoDbContext>(options => 
+            //                      options.UseSqlServer(Configuration.GetConnectionString("ConnectionString"),
+            //                      sqlServerOptionsAction: sqlOptions => 
+            //                      {
+            //                          sqlOptions.EnableRetryOnFailure(
+            //                          maxRetryCount: 2,
+            //                          maxRetryDelay: TimeSpan.FromSeconds(30),
+            //                          errorNumbersToAdd: null);
+            //                      }
+            //                      )
+            //                      );
+
+            services.AddDbContext<DemoDbContext>(
+                        options => options.UseSqlServer(
+                        "Data Source=NIDHI-0044;database=DemoData;Trusted_Connection=true",
+                                providerOptions => providerOptions.EnableRetryOnFailure(
+                                    maxRetryCount: 2, 
+                                    maxRetryDelay: TimeSpan.FromSeconds(30),
+                                    errorNumbersToAdd: null
+
+                                    )));
 
             //polly retry policy
             services.AddHttpClient("csharpcorner").SetHandlerLifetime(TimeSpan.FromMinutes(1)).AddPolicyHandler(GetRetryPolicy());

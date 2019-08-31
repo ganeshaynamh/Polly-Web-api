@@ -30,15 +30,16 @@ namespace WebApiDemo.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DemoModel>>> GetModelItem()
         {
-            //var message = Encoding.UTF8.GetBytes("hello, retry pattern");
+            var message = Encoding.UTF8.GetBytes("hello, retry pattern");
 
             var retry = Policy
             .Handle<Exception>()
             .WaitAndRetry(2, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
             try
             {
-                retry.Execute(() => {
-                    Console.WriteLine($"begin at RetryAttemp",retry);
+                retry.Execute(() =>
+                {
+                    Console.WriteLine($"begin at RetryAttemp", retry);
                 });
                 //return Ok("retryAttempt");
 
